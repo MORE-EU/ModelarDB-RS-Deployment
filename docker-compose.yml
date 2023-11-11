@@ -1,0 +1,83 @@
+version: "3"
+
+services:
+  # MinIO services.
+  minio-server:
+    image: minio/minio
+    container_name: minio-server-demo
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server --console-address ":9001" /data
+
+  create-bucket:
+    image: minio/mc
+    container_name: create-bucket-demo
+    depends_on:
+      - minio-server
+    entrypoint:
+      /bin/sh -c "
+      /usr/bin/mc config host add modelardata-minio http://minio-server:9000 minioadmin minioadmin;
+      /usr/bin/mc mb modelardata-minio/modelardata;
+      exit 0;
+      "
+
+  # Metadata database service.
+  postgres:
+    image: postgres:latest
+    container_name: postgres-demo
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: metadata
+
+  # ModelarDB services.
+  modelardb-manager:
+    container_name: modelardb-manager-demo
+    build: ModelarDB-RS/.
+    command: ["target/release/modelardbm", "metadata", "s3://modelardata"]
+    ports:
+      - "8888:8888"
+    environment:
+      METADATA_DB_HOST: postgres
+      METADATA_DB_PASSWORD: password
+      METADATA_DB_USER: postgres
+      AWS_ACCESS_KEY_ID: minioadmin
+      AWS_SECRET_ACCESS_KEY: minioadmin
+      AWS_DEFAULT_REGION: eu-central-1
+      AWS_ENDPOINT: http://minio-server:9000
+      AWS_ALLOW_HTTP: "true"
+    depends_on:
+      - minio-server
+      - create-bucket
+      - postgres
+
+  modelardb-edge:
+    container_name: modelardb-edge-demo
+    build: ModelarDB-RS/.
+    command: ["target/release/modelardbd", "multi", "edge", "grpc://modelardb-manager:8888", "data/edge"]
+    ports:
+      - "9999:9999"
+    depends_on:
+      - modelardb-manager
+    volumes:
+      - ./data/edge:/usr/src/app/data/edge
+
+  modelardb-cloud:
+    container_name: modelardb-cloud-demo
+    build: ModelarDB-RS/.
+    command: [ "target/release/modelardbd", "multi", "cloud", "grpc://modelardb-manager:8888", "data/cloud" ]
+    ports:
+      - "9998:9998"
+    environment:
+      MODELARDBD_PORT: 9998
+    depends_on:
+      - modelardb-manager
+      - modelardb-edge
+    volumes:
+      - ./data/cloud:/usr/src/app/data/cloud
