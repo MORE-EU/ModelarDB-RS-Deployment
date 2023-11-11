@@ -4,7 +4,7 @@ services:
   # MinIO services.
   minio-server:
     image: minio/minio
-    container_name: minio-server-demo
+    container_name: minio-server
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -15,7 +15,7 @@ services:
 
   create-bucket:
     image: minio/mc
-    container_name: create-bucket-demo
+    container_name: create-bucket
     depends_on:
       - minio-server
     entrypoint:
@@ -28,7 +28,7 @@ services:
   # Metadata database service.
   postgres:
     image: postgres:latest
-    container_name: postgres-demo
+    container_name: postgres
     ports:
       - "5432:5432"
     environment:
@@ -38,7 +38,7 @@ services:
 
   # ModelarDB services.
   modelardb-manager:
-    container_name: modelardb-manager-demo
+    container_name: modelardb-manager
     build: ModelarDB-RS/.
     command: ["target/release/modelardbm", "metadata", "s3://modelardata"]
     ports:
@@ -58,7 +58,7 @@ services:
       - postgres
 
   modelardb-edge:
-    container_name: modelardb-edge-demo
+    container_name: modelardb-edge
     build: ModelarDB-RS/.
     command: ["target/release/modelardbd", "multi", "edge", "grpc://modelardb-manager:8888", "data/edge"]
     ports:
@@ -69,7 +69,7 @@ services:
       - ./data/edge:/usr/src/app/data/edge
 
   modelardb-cloud:
-    container_name: modelardb-cloud-demo
+    container_name: modelardb-cloud
     build: ModelarDB-RS/.
     command: [ "target/release/modelardbd", "multi", "cloud", "grpc://modelardb-manager:8888", "data/cloud" ]
     ports:
@@ -81,3 +81,12 @@ services:
       - modelardb-edge
     volumes:
       - ./data/cloud:/usr/src/app/data/cloud
+
+  # Utility service used to create the table in ModelarDB after startup.
+  create-table:
+    container_name: create-table
+    build: .
+    depends_on:
+      - modelardb-manager
+      - modelardb-edge
+      - modelardb-cloud
