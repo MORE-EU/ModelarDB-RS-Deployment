@@ -1,6 +1,6 @@
 [submodule "ModelarDB-RS"]
 	path = ModelarDB-RS
-	url = https://github.com/ModelarData/ModelarDB-RS
+	url = https://github.com/ModelarData/ModelarDB-RS/tree/temp/more-cluster-deployment
 [submodule "Telegraf-Output-Apache-Arrow-Flight"]
 	path = Telegraf-Output-Apache-Arrow-Flight
 	url = https://github.com/ModelarData/Telegraf-Output-Apache-Arrow-Flight
