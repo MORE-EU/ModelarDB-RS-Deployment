@@ -42,7 +42,7 @@ services:
     build: ModelarDB-RS/.
     command: ["target/release/modelardbm", "metadata", "s3://modelardata"]
     ports:
-      - "8888:8888"
+      - "9998:9998"
     environment:
       METADATA_DB_HOST: postgres
       METADATA_DB_PASSWORD: password
@@ -60,7 +60,7 @@ services:
   modelardb-edge:
     container_name: modelardb-edge
     build: ModelarDB-RS/.
-    command: ["target/release/modelardbd", "multi", "edge", "grpc://modelardb-manager:8888", "data/edge"]
+    command: ["target/release/modelardbd", "edge", "data/edge", "grpc://modelardb-manager:9998"]
     ports:
       - "9999:9999"
     depends_on:
@@ -71,11 +71,11 @@ services:
   modelardb-cloud:
     container_name: modelardb-cloud
     build: ModelarDB-RS/.
-    command: [ "target/release/modelardbd", "multi", "cloud", "grpc://modelardb-manager:8888", "data/cloud" ]
+    command: [ "target/release/modelardbd", "cloud", "data/cloud", "grpc://modelardb-manager:9998"]
     ports:
-      - "9998:9998"
+      - "9997:9997"
     environment:
-      MODELARDBD_PORT: 9998
+      MODELARDBD_PORT: 9997
     depends_on:
       - modelardb-manager
       - modelardb-edge
