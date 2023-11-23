@@ -94,9 +94,7 @@ services:
   # Utility service used to build the binary for the output plugin.
   output-plugin-builder:
     container_name: output-plugin-builder
-    build:
-      context: ./
-      dockerfile: telegraf/Dockerfile
+    build: telegraf/.
     volumes:
       - binary:/binary
 

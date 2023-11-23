@@ -2,5 +2,5 @@
 	path = ModelarDB-RS
 	url = https://github.com/ModelarData/ModelarDB-RS
 [submodule "Telegraf-Output-Apache-Arrow-Flight"]
-	path = Telegraf-Output-Apache-Arrow-Flight
+	path = telegraf/Telegraf-Output-Apache-Arrow-Flight
 	url = https://github.com/ModelarData/Telegraf-Output-Apache-Arrow-Flight
