@@ -90,3 +90,29 @@ services:
       - modelardb-manager
       - modelardb-edge
       - modelardb-cloud
+
+  # Utility service used to build the binary for the output plugin.
+  output-plugin-builder:
+    container_name: output-plugin-builder
+    build:
+      context: ./
+      dockerfile: telegraf/Dockerfile
+    volumes:
+      - binary:/binary
+
+  # Telegraf server used to ingest MQTT data into the edge node.
+  telegraf:
+    image: telegraf
+    container_name: telegraf
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - ./telegraf/sample.conf:/etc/telegraf/sample.conf
+      - binary:/etc/telegraf
+    depends_on:
+      - output-plugin-builder
+      - modelardb-manager
+      - modelardb-edge
+      - modelardb-cloud
+
+volumes:
+  binary:
