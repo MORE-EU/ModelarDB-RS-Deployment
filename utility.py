@@ -18,7 +18,5 @@ if __name__ == "__main__":
     do_action(
         manager_client,
         "CommandStatementUpdate",
-        "CREATE MODEL TABLE windmill(location TAG, install_year TAG, model"
-        " TAG, timestamp TIMESTAMP, power_output FIELD, wind_speed FIELD, temperature"
-        " FIELD(5))",
+        "CREATE MODEL TABLE windmill(timestamp TIMESTAMP, temperature FIELD, wind_speed FIELD)",
     )
