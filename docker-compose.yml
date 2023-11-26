@@ -82,9 +82,9 @@ services:
     volumes:
       - ./data/cloud:/usr/src/app/data/cloud
 
-  # Utility service used to create the table in ModelarDB after startup.
-  create-table:
-    container_name: create-table
+  # Utility service used to create the table in ModelarDB after startup and flush the edge periodically.
+  flight-utility:
+    container_name: flight-utility
     build: .
     depends_on:
       - modelardb-manager
