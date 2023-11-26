@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  # MQTT broker that can receive messages from the MQTT streamer.
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+
