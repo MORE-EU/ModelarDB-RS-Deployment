@@ -7,7 +7,12 @@ services:
     container_name: mosquitto
     ports:
       - "1883:1883"
-      - "9001:9001"
     volumes:
       - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
 
+  # MQTT streamer that streams messages from the specified CSV file to the MQTT broker.
+  mqttstreamer:
+    container_name: mqttstreamer
+    build: .
+    depends_on:
+      - mosquitto
