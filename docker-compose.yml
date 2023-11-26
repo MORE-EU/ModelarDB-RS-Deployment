@@ -105,6 +105,7 @@ services:
     volumes:
       - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
       - ./telegraf/sample.conf:/etc/telegraf/sample.conf
+      - ./telegraf/message.proto:/etc/telegraf/message.proto
       - binary:/etc/telegraf
     depends_on:
       - output-plugin-builder
