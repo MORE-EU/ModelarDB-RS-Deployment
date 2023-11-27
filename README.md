@@ -30,7 +30,17 @@ docker-compose -p modelardb-pilot stop
 Running the pilot environment starts the services required by ModelarDB to run the full environment with all features 
 available. The following table describes the full list of services that are running in the pilot environment.
 
-TODO: Add a table.
+| **Name**              | **Description**                                                                                                                                          |
+|-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| minio-server          | [MinIO](https://min.io/) server that functions as the remote object store.                                                                               |
+| create-bucket         | [MinIO](https://min.io/) client to initialize the demo bucket `modelardata`.                                                                             |
+| postgres              | [PostgreSQL](https://www.postgresql.org/) database used for the cluster metadata database.                                                               |
+| modelardb-manager     | ModelarDB manager with an [Apache Arrow](https://arrow.apache.org) Flight interface that can be accessed by sending requests to `grpc://127.0.0.1:9998`. |
+| modelardb-edge        | ModelarDB edge with an [Apache Arrow](https://arrow.apache.org) Flight interface that can be accessed by sending requests to `grpc://127.0.0.1:9999`.    |
+| modelardb-cloud       | ModelarDB cloud with an [Apache Arrow](https://arrow.apache.org) Flight interface that can be accessed by sending requests to `grpc://127.0.0.1:9997`.   |
+| create-table          | Python script in [utility.py](utility.py) used to create the `windmill` table in ModelarDB after startup.                                                |
+| output-plugin-builder | Utility service used to build the binary for the [Telegraf](https://www.influxdata.com/time-series-platform/telegraf) output plugin.                     |
+| telegraf              | [Telegraf](https://www.influxdata.com/time-series-platform/telegraf) server used to ingest MQTT data into the ModelarDB edge node.                       |
 
 ## Configuration
 
@@ -41,6 +51,8 @@ TODO: Configure the table that is ingested into
 TODO: Configure ModelarDB edge settings (link to documentation).
 
 ## Features
+
+TODO: How to access manager, edge, and cloud.
 
 TODO: How to ingest with MQTT streamer
 
