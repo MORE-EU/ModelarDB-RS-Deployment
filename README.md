@@ -66,11 +66,19 @@ Finally, it is also possible to configure the ModelarDB edge node to transfer da
 the service `modelardb-edge` in [docker-compose.yml](docker-compose.yml).
 
 ## Features
+When the pilot is deployed, the different services are available to be accessed directly outside the deployment. The
+web interface for the [MinIO](https://min.io/) object store is available at `http://127.0.0.1:9001` and can be accessed 
+by using `minioadmin` as the username and password.
 
-TODO: How to access manager, edge, and cloud.
+The [Apache Arrow](https://arrow.apache.org) Flight interface for the ModelarDB manager, edge, and cloud can be accessed
+using a Flight client such as [PyArrow](https://pypi.org/project/pyarrow/) and connecting to `grpc://127.0.0.1:9998` 
+for the manager, `grpc://127.0.0.1:9999` for the edge, and `grpc://127.0.0.1:9997` for the cloud. Information on how to 
+ingest data into the edge and query data from either the edge or cloud is available in the ModelarDB-RS 
+[Usage](https://github.com/ModelarData/ModelarDB-RS/blob/main/docs/user/README.md#usage) documentation. Note that when 
+querying the ModelarDB edge, only data local in the edge is returned while when querying the ModelarDB cloud, only data 
+in the [MinIO](https://min.io/) object store is returned.
 
-TODO: How to ingest with MQTT streamer
-
-TODO: How to ingest normally.
-
-TODO: How to query.
+Since a [Telegraf](https://www.influxdata.com/time-series-platform/telegraf) server is available, data can also be 
+ingested into the ModelarDB edge by streaming data to the configured topic of the configured MQTT broker. The MQTT data 
+needs to match the schema of the pilot table to be ingested into ModelarDB using
+[Telegraf](https://www.influxdata.com/time-series-platform/telegraf).
