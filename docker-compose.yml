@@ -77,7 +77,7 @@ services:
       MODELARDBD_TRANSFER_BATCH_SIZE_IN_BYTES: 10000
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    restart: always
+    restart: on-failure:10
     depends_on:
       - modelardb-manager
     volumes:
@@ -93,7 +93,7 @@ services:
       MODELARDBD_PORT: 9997
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    restart: always
+    restart: on-failure:10
     depends_on:
       - modelardb-manager
       - modelardb-edge
