@@ -106,6 +106,7 @@ services:
     build: .
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    restart: on-failure:10
     depends_on:
       - modelardb-manager
       - modelardb-edge
